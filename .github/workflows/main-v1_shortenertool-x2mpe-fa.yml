@@ -36,19 +36,17 @@ jobs:
           dotnet build --configuration Release --output ./output
           popd
       
-      - name: Login to Azure
-        uses: azure/login@v2
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E97F42EADCDC428AAB4B8F3611B51D97 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6632F65064C140DEB82E73F240CE423C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8BB88FFFF2084C4784F217D8150D0B9F }}
-          
-      - name: 'Run Azure Functions Action'
-        uses: Azure/functions-action@v1
-        id: fa
+            creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+      - name: Deploy to Azure Functions
+        uses: azure/functions-action@v1
         with:
-          app-name: 'shortenertool-x2mpe-fa'
-          slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+            app-name: shortenertool-x2mpe-fa
+            package: ./publish
+            publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
+
 
 
